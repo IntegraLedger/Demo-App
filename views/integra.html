@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello World</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <script type="text/javascript" src="sha1.js"></script>
+    <script type="text/javascript" src="process.js"></script>
+   
+    
+</head>
+
+<body>
+    <div class="container">
+            <div class="well well-sm">
+        <h2>Integra Ledger Demo</h2>
+        <form action="">
+                <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose ID Type
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                          <li><a href="#" id="LMATAction">LMATId</a></li>
+                          <li><a href="#" id="DocumentAction">DocumentId</a></li>
+                        </ul>
+                      </div>
+          
+                    </p>
+            <div class="form-group">
+            <label for="text">Identity Type:</label>
+            <input type="text" class="form-control" id="idType" placeholder="Enter optional metaData" name="idType">
+          </div>           
+          <div class="form-group" id="metaDataGroup">
+            <label for="text">Metadata:</label>
+            <input type="text" class="form-control" id="md" placeholder="Enter optional metaData" name="md">
+          </div>
+          <div class="form-group" id="DocumentDataGroup">
+                <label for="text">Document Data:</label>
+                <input type="text" class="form-control" id="valueData" placeholder="Enter Document Hash" name="valueData">
+            </p>
+        </p>
+                <form id="fileForm" class="fileForm">
+                        <input id="fileInput" type="file" class="btn btn-primary btn-md" required="required" />
+                       
+                    </form>
+            </div>
+        
+          <button type="button" id="getIDBtn" class="btn btn-primary btn-md">Get Integra ID</button>
+        </form>
+   
+     
+            
+        <div class="" id="idResults">
+            </p>
+                <form action="">
+                <label for="integraId">IntegraId:</label>
+                <input type="input" class="form-control" id="integraId" placeholder="" name="integraId">
+                <p id="databaseNames" class="lead text-left"></p>
+              
+            </p>
+              <button type="button" id="verifyIDBtn" class="btn btn-primary btn-md">Verify Integra ID</button>  <label id="existsLbl">Exists</label>
+            </p>
+        </p>
+    </p>
+    
+            <button type="button" id="verifyDocBtn" class="btn btn-primary btn-md">Verify Document Hash</button>  <label id="existsDocLbl">Exists</label>
+        </p>
+            <label for="docHash">Document Hash:</label>
+            <input type="input" class="form-control" id="docHash" placeholder="" name="docHash">
+        </form>
+    </p>
+</p>
+        <form id="fileFormCheck" class="fileForm">
+                <input id="fileInputCheck" type="file" class="btn btn-primary btn-md" required="required" />
+               
+            </form>
+
+                   </p>
+    </p>
+    <p />
+    <p />
+    <button type="button" id="CallClio" class="btn btn-primary btn-md">Create Clio Matter</button> 
+    
+            <label for="ClioID">Clio Matter:</label>
+            <input type="input" class="form-control" id="ClioID" placeholder="" name="ClioID">
+            <p />
+            <p />
+            <button type="button" id="Phantom" class="btn btn-primary btn-md">Capture Webpage</button> 
+        </div>
+      </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="antixss.js" type="text/javascript"></script>
+
+    <script>
+         function initialize() {
+        
+        clearResults();
+    }
+
+        //Submit data when enter key is pressed
+        
+
+        $("#LMATAction").click(function(e){
+            setLMATType();
+            e.preventDefault();
+        });
+        $("#DocumentAction").click(function(e){
+            setDocumentType();
+            e.preventDefault();
+        });
+
+        $('#getIDBtn').click(function(e) {
+           // alert ("call data");
+           var theIDType =  $('#idType').val();
+           var value = $('#valueData').val();
+           var md = $('#md').val();
+           var theURL = `./api/registerIdentity?type=${theIDType}&value=${value}`;
+         
+           // var theURL = "./api/registerIdentity?type=" + theIDType + "&metaData="+ md + "&value=" + value; // + "&metaData=" + md+ "&value=" + value
+            //alert (theURL);
+         // alert ("metaData: " + md);
+          // $('#idResults').hide();
+          $('#existsLbl').text('');
+          $('#integraId').val('');
+           $('#integraId').val('');
+                $.ajax({
+				  method: "Get",
+				  url: theURL,
+                  contentType: "application/json",
+                  accept: "application/json",
+                  //data: JSON.stringify({name: name })
+                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+				})
+                .done(function(data) {
+                    var res = (data['identityId']);
+                   // alert ("got data:" + data['identityId']);
+                    $('#integraId').val(res);
+                    $('#idResults').show();
+                    //$('#response').html(AntiXSS.sanitizeInput(data));
+                    //$('#nameInput').hide();
+                   // getNames();
+                });
+               
+        });
+        $('#verifyIDBtn').click(function(e) {
+           // alert ("call data");
+           var theIDType =  $('#idType').val();
+          // alert ("theIDType: " + theIDType);
+          // $('#idResults').hide();
+          $('#existsLbl').text('');
+           var theID = $('#integraId').val();
+                $.ajax({
+				  method: "Get",
+				  url: "./api/identityExists?id=" + theID,
+                  contentType: "application/json",
+                  accept: "application/json",
+                  //data: JSON.stringify({name: name })
+                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+				})
+                .done(function(data) {
+                    var res = (data['exists']);
+                   // alert ("got data:" + data['identityId']);
+                    $('#existsLbl').text(res);
+                   
+                    //$('#response').html(AntiXSS.sanitizeInput(data));
+                    //$('#nameInput').hide();
+                   // getNames();
+                });
+               
+        });
+
+
+        $('#verifyDocBtn').click(function(e) {
+           // alert ("call data");
+           var theIDType =  $('#idType').val();
+          // $('#idResults').hide();
+          $('#existsDocLbl').text('');
+           var theID = $('#docHash').val();
+         //  alert ("docHash " + theID);
+                $.ajax({
+				  method: "Get",
+				  url: "./api/valueExists?id=" + theID,
+                  contentType: "application/json",
+                  accept: "application/json",
+                  //data: JSON.stringify({name: name })
+                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+				})
+                .done(function(data) {
+                    var res = (data['exists']);
+                   // alert ("got data:" + data['identityId']);
+                    $('#existsDocLbl').text(res);
+                   
+                    //$('#response').html(AntiXSS.sanitizeInput(data));
+                    //$('#nameInput').hide();
+                   // getNames();
+                });
+               
+        });
+
+        function createClioMatter (lMatID){
+          //  alert (`called LMATID ${lMatID}`);
+            var clientID = '941888686';
+            var desc = 'Sample_Matter_Created _From_Integra';
+            var theURL = `http://localhost:3001/api/postToClio?LMAT=${lMatID}`;
+            console.log (theURL);
+              $.ajax({
+                method: "Get",
+                url: theURL,
+                Authorization: "Bearer UskTXxAGVeQwulmfirrCYVMcdztfy1zEaXY7TA26",
+              })
+              .done(function(data) {
+                // alert (data['ClioID']);
+                var msg = `Clio Matter ID ${data['ClioID']} Created with Client Reference # (LMAT) ${lMatID}`;
+                $('#ClioID').val(msg);
+              });
+        }
+
+        $('#CallClio').click(function(e) {
+         var md = $('#md').val();
+         var value = $('#valueData').val();
+         var theIDType =  $('#idType').val();
+         //var theURL = `./api/registerIdentity?type=${theIDType}&value=${value}`;
+         //var theURL = `./api/registerIdentity?type=com.integraledger.lmat&value="${value}"`;
+         var theURL = `./api/registerIdentity?type=${theIDType}&value=${value}`;
+              $.ajax({
+                method: "Get",
+                url: theURL,
+                contentType: "application/json",
+                accept: "application/json",
+              })
+              .done(function(data) {
+                  var res = (data['identityId']);
+                 // alert (data['identityId']);
+                  createClioMatter(data['identityId']);
+                 
+              });
+             
+               
+        });
+
+
+        function setLMATType(){
+            $('#idType').val("com.integraledger.lmat");
+            $('#DocumentDataGroup').hide();
+            $('#valueData').val("");
+           // $('#idResults').hide();
+        }
+
+        function setDocumentType(){
+            $('#idType').val("com.integraledger.document");
+            $('#DocumentDataGroup').show();
+            $('#valueData').val("");
+            
+    clearResults();
+           // $('#idResults').hide();
+        }
+        
+
+       
+
+
+
+        //Retreive all the visitors from the database
+        function getNames(){
+          $.get("./api/visitors")
+              .done(function(data) {
+                  if(data.length > 0) {
+                    data.forEach(function(element, index) {
+                      data[index] = AntiXSS.sanitizeInput(element)
+                    });
+                    $('#databaseNames').html("Database contents: " + JSON.stringify(data));
+                  }
+              });
+          }
+
+          //Call getNames on page load.
+         // getNames();
+         setLMATType();
+         // $('#idResults').hide();
+         initialize();
+         $("#fileInput").change(function(){
+        //alert ("selected");
+        startProcessing($("#fileInput"), populateResults, populateError, populateProgress);
+ });
+ $("#fileInputCheck").change(function(){
+      //alert ("selected");
+      $('#existsDocLbl').text('Exists');
+       startProcessing($("#fileInputCheck"), populateResultsCheck, populateError, populateProgress);
+ });
+
+         
+function calculateHash(fileContents) {
+    return sha1.hash(fileContents);
+}
+ 
+function startProcessing(fileInput, onsuccess, onerror, onprogress) {
+    var fileList = fileInput[0].files;
+    var file = fileList[0];
+    var results = {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        hash: ""
+    };
+ 
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+        results.hash = calculateHash(e.target.result);
+        onsuccess(results);
+    };
+    fileReader.onerror = function(e) {
+        onerror(e.target.error.name);
+    };
+    fileReader.onprogress = function(e) {
+        onprogress(e.loaded, e.total);
+    };
+    fileReader.readAsArrayBuffer(file);
+}
+ 
+function setResults(name, size, type, hash) {
+   // var table = $("#processResults");
+   // table.find("#nameValue").text(name);
+   // table.find("#sizeValue").text(size);
+   // table.find("#typeValue").text(type);
+   // table.find("#hashValue").text(hash);
+   // alert ("qqq " + hash + " " + name);
+  // $('#valueData').val(hash);
+}
+ 
+function clearResults() {
+    $("#processProgress").val(0).show();
+    $("#processError").hide();
+    $("#processResults").hide();
+   // setResults("", "", "", "");
+}
+ 
+function populateResults(data) {
+    $("#processProgress").val(1);
+    $("#processResults").show();
+    //setResults(data.name, data.size, data.type, data.hash);
+    $('#valueData').val(data.hash);
+}
+function populateResultsCheck(data) {
+    $("#processProgress").val(1);
+    $("#processResults").show();
+    //setResults(data.name, data.size, data.type, data.hash);
+   //docHash
+   $('#docHash').val(data.hash);
+}
+function populateError(msg) {
+    $("#processProgress").hide();
+    $("#processError").text("Failed to read file: " + msg);
+    $("#processError").show();
+}
+ 
+function populateProgress(loaded, total) {
+    $("#processProgress").val(loaded / total);
+}
+ 
+function initialize() {
+    
+    $("#fileForm").submit(function(e) {
+        e.preventDefault();
+        //clearResults();
+        startProcessing($("#fileInput"), populateResults, populateError, populateProgress);
+    });
+    clearResults();
+}
+ 
+         
+    </script>
+</body>
+
+</html>

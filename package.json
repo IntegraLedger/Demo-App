@@ -1,0 +1,26 @@
+{
+  "name": "Integra",
+  "main": "server.js",
+  "description": "An introduction to developing Node.js apps on the Bluemix platform",
+  "version": "0.1.1",
+  "private": false,
+  "engines": {
+    "node": "6.*"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IBM-Bluemix/get-started-node"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.x",
+    "cfenv": "^1.0.x",
+    "cloudant": "^1.7.x",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.x"
+  },
+  "author": "IBM Corp",
+  "license": "Apache-2.0"
+}
