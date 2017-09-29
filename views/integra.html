@@ -19,7 +19,21 @@
 <body>
     <div class="container">
             <div class="well well-sm">
-        <h2>Integra Ledger Demo</h2>
+        <h2>Integra Ledger Demox</h2>
+
+                <form action="">
+
+
+                    <div class="form-group">
+                        <label for="registerKey">Register Key:</label>
+                        <input type="text" class="form-control" id="keyValue" placeholder="Enter Public Key" name="idType">
+                    </div>
+
+
+                    <button type="button" id="registerKey" class="btn btn-primary btn-md">Reguster Key</button>
+                </form>
+
+
         <form action="">
                 <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose ID Type
@@ -93,6 +107,8 @@
             <button type="button" id="Phantom" class="btn btn-primary btn-md">Capture Webpage</button> 
         </div>
       </div>
+
+
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -151,6 +167,8 @@
                 });
                
         });
+
+
         $('#verifyIDBtn').click(function(e) {
            // alert ("call data");
            var theIDType =  $('#idType').val();

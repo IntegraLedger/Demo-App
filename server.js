@@ -133,7 +133,7 @@ app.get("/api/registerIdentity", function (request, response) {
    // console.log ('x ' + theMetaData);
     var request = require('request');
     var options = {
-      url: 'http://184.172.242.210:31090/api/RegisterIdentity',
+      url: 'http://184.172.250.39:31090/api/RegisterIdentity',
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       },
@@ -150,6 +150,45 @@ app.get("/api/registerIdentity", function (request, response) {
 
 });
 
+
+
+app.get("/api/registerKey", function (request, response) {
+    //   o String keyValue
+    // --> User   owner
+    var r = response;
+    var theOwner = request.query['owner'];
+    var theValue = request.query['value'];
+    var theBody = '{"$class": "com.integraledger.identityregistry.RegisterKey","owner":"'+theOwner+'","keyValue":"' + theValue+ '"}';
+
+    var cb = function callback(error, response, body) {
+
+        var theResponse = {'theKey':theValue}; //, 'identityType':theType,'value':theValue, 'metaData': theMetaData
+        r.json(theResponse);
+
+        return;
+
+    }
+
+    if(true) {
+        // console.log ('x ' + theMetaData);
+        var request = require('request');
+        var options = {
+            url: 'http://184.172.250.39:31090/api/RegisterKey',
+            headers: {
+                'Content-Type': 'application/json',  'Accept': 'application/json'
+            },
+            body:theBody//,"metaData":"md1", "value":"v1"
+        };
+
+
+        request
+            .post(options,cb)
+            .on('response', function(response) {
+
+            })
+    }
+
+});
 app.get("/api/postToClio", function (request, response) {
  
   var r = response
@@ -214,7 +253,7 @@ var theId = request.query['id'];
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://184.172.242.210:31090/api/queries/idExists?identityId=' + theId,
+      url: 'http://184.172.250.39:31090/api/queries/idExists?identityId=' + theId,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
@@ -257,7 +296,7 @@ var theId = request.query['value'];
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://184.172.242.210:31090/api/queries/valueExists?value=' + theId,
+      url: 'http://184.172.250.39:31090/api/queries/valueExists?value=' + theId,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
@@ -274,6 +313,41 @@ var theId = request.query['value'];
 });
 
 
+app.get("/api/keyForOwner", function (request, response) {
+
+    var r = response
+    var theOwner = request.query['value'];
+
+
+    var cb = function callback(error, response, body) {
+
+        var res= JSON.parse(body);
+        var exists = res.length==0?false:true
+        var names = {'exists':exists};
+        r.json(names);
+        // r.send({'LMATID', theGuid});
+        return;
+        // }
+    }
+
+    if(true) {
+        var request = require('request');
+        var options = {
+            url: 'http://184.172.250.39:31090/api/queries/keyForOwner?value=' + theId,
+            headers: {
+                'Content-Type': 'application/json',  'Accept': 'application/json'
+            }
+        };
+
+
+        request
+            .get(options,cb)
+            .on('response', function(response) {
+
+            })
+    }
+
+});
 
 // load local VCAP configuration  and service credentials
 var vcapLocal;

@@ -17,6 +17,8 @@
 </head>
 
 <body>
+
+
     <div class="container">
             <div class="well well-sm">
         <h2>Integra Ledger Demo</h2>
@@ -129,7 +131,27 @@
     <p />
    
         </div>
+
+                <form action="">
+
+
+                    <div class="form-group">
+                        <label for="registerKey">Register Key:</label>
+                        <input type="text" class="form-control" id="keyValue" placeholder="Enter Public Key" name="idType">
+                        </p>
+                        <label for="keyUser">Key User:</label>
+                        <input type="text" class="form-control" id="keyUser" placeholder="Enter Owner of Key" name="keyUser">
+                    </div>
+
+
+                    <button type="button" id="registerKeyBtn" class="btn btn-primary btn-md">Reguster Key</button>
+                    </p>
+
+                    <button type="button" id="checkKeyOwnerBtn" class="btn btn-primary btn-md">Get Owner for Key</button>  <label id="checkKeyOwnerLbl">xxx</label>
+                </form>
       </div>
+
+
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -284,7 +306,65 @@
                
         });
 
+         $('#registerKeyBtn').click(function(e) {
+             // alert ("call data");
 
+             var value = $('#keyValue').val();
+             var user =  $('#keyUser').val();
+             var theURL = `./api/registerKey?owner=${user}&value=${value}`;
+
+             // var theURL = "./api/registerIdentity?type=" + theIDType + "&metaData="+ md + "&value=" + value; // + "&metaData=" + md+ "&value=" + value
+             //alert (theURL);
+             // alert ("metaData: " + md);
+             // $('#idResults').hide();
+
+            // $('#keyValue').val('');
+             $.ajax({
+                 method: "Get",
+                 url: theURL,
+                 contentType: "application/json",
+                 accept: "application/json",
+                 //data: JSON.stringify({name: name })
+                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+             })
+                 .done(function(data) {
+                     var res = (data['keyValue']);
+                     // alert ("got data:" + data['identityId']);
+                    // $('#keyValue').val(res);
+                     //$('#idResults').show();
+                     //$('#response').html(AntiXSS.sanitizeInput(data));
+                     //$('#nameInput').hide();
+                     // getNames();
+                 });
+
+         });
+
+         $('#checkKeyOwnerBtn').click(function(e) {
+             // alert ("call data");
+             var theIDType =  $('#idType').val();
+             // $('#idResults').hide();
+             $('#existsDocLbl').text('');
+             var theID = $('#docHash').val();
+             //  alert ("docHash " + theID);
+             $.ajax({
+                 method: "Get",
+                 url: "./api/keyForOwner?value=" + theID,
+                 contentType: "application/json",
+                 accept: "application/json",
+                 //data: JSON.stringify({name: name })
+                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+             })
+                 .done(function(data) {
+                     var res = (data['exists']);
+                     // alert ("got data:" + data['identityId']);
+                     $('#existsDocLbl').text(res);
+
+                     //$('#response').html(AntiXSS.sanitizeInput(data));
+                     //$('#nameInput').hide();
+                     // getNames();
+                 });
+
+         });
         function setLMATType(){
             $('#idType').val("com.integraledger.lmat");
             $('#DocumentDataGroup').hide();
