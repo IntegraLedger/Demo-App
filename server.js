@@ -18,6 +18,8 @@ var mydb;
 * 	"name": "Bob"
 * }
 */
+
+//Smaple Database Code
 app.post("/api/visitors", function (request, response) {
   var userName = request.body.name;
   if(!mydb) {
@@ -133,7 +135,7 @@ app.get("/api/registerIdentity", function (request, response) {
    // console.log ('x ' + theMetaData);
     var request = require('request');
     var options = {
-      url: 'http://184.172.250.39:31090/api/RegisterIdentity',
+      url: 'http://184.172.214.100:31090/api/RegisterIdentity',
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       },
@@ -173,7 +175,7 @@ app.get("/api/registerKey", function (request, response) {
         // console.log ('x ' + theMetaData);
         var request = require('request');
         var options = {
-            url: 'http://184.172.250.39:31090/api/RegisterKey',
+            url: 'http://184.172.214.100:31090/api/RegisterKey',
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             },
@@ -253,7 +255,7 @@ var theId = request.query['id'];
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://184.172.250.39:31090/api/queries/idExists?identityId=' + theId,
+      url: 'http://184.172.214.100:31090/api/queries/idExists?identityId=' + theId,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
@@ -296,7 +298,7 @@ var theId = request.query['value'];
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://184.172.250.39:31090/api/queries/valueExists?value=' + theId,
+      url: 'http://184.172.214.100:31090/api/queries/valueExists?value=' + theId,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
@@ -316,15 +318,25 @@ var theId = request.query['value'];
 app.get("/api/keyForOwner", function (request, response) {
 
     var r = response
-    var theOwner = request.query['value'];
+    var theOwner = request.query['owner'];
 
 
     var cb = function callback(error, response, body) {
 
         var res= JSON.parse(body);
-        var exists = res.length==0?false:true
-        var names = {'exists':exists};
-        r.json(names);
+        console.log(res);
+        //var exists = res.length==0?false:true;
+       if (res.length > 0){
+          var rec = res[0];
+           console.log(rec);
+          var theKey = rec['keyValue'];
+           var names = {'key':theKey};
+           r.json(names);
+       }
+       else{
+          r.json({'key':'No Key'}) ;
+       }
+
         // r.send({'LMATID', theGuid});
         return;
         // }
@@ -333,7 +345,7 @@ app.get("/api/keyForOwner", function (request, response) {
     if(true) {
         var request = require('request');
         var options = {
-            url: 'http://184.172.250.39:31090/api/queries/keyForOwner?value=' + theId,
+            url: 'http://184.172.214.100:31090/api/queries/keyForOwner?owner=' + 'resource%3Acom.integraledger.identityregistry.User%23' + theOwner,
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             }

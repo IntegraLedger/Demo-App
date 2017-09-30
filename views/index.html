@@ -131,7 +131,15 @@
     <p />
    
         </div>
-
+                <B>Endpoint:</B> registerKey  </p>
+                <B>URL Base:</B> https://integra-demo.mybluemix.net/api/  </p>
+                <B>Query String</B></p>
+                <I>keyValue:</I>  the Key string</p>
+                <I>keyUser:</I>  owner string</p>
+                <B>Return:</B>{"theKey":"3048024100C918FA"}
+                </p>
+                <B>Sample:</B>  <a href="https://integra-demo.mybluemix.net/api/registerKey?keyOwner=Melissa&keyValue=3048024100C918FA" target="_blank">https://integra-demo.mybluemix.net/api/registerKey?keyOwner=Melissa&keyValue=3048024100C918FA</p>
+            </a>  </p>
                 <form action="">
 
 
@@ -147,8 +155,21 @@
                     <button type="button" id="registerKeyBtn" class="btn btn-primary btn-md">Reguster Key</button>
                     </p>
 
-                    <button type="button" id="checkKeyOwnerBtn" class="btn btn-primary btn-md">Get Owner for Key</button>  <label id="checkKeyOwnerLbl">xxx</label>
+
                 </form>
+        <B>Endpoint:</B> keyForOwner  </p>
+        <B>URL Base:</B> https://integra-demo.mybluemix.net/api/  </p>
+        <B>Query String</B></p>
+        <I>keyUser:</I>  owner string</p>
+    <B>Return:</B>{
+                "$class": "com.integraledger.identityregistry.Key",
+                "keyValue": "3048024100C918FA",
+                "owner": "resource:com.integraledger.identityregistry.User#Melissa"
+                }
+    </p>
+    <B>Sample:</B>  <a href="https://integra-demo.mybluemix.net/api/registerKey?keyOwner=Melissa&keyValue=3048024100C918FA" target="_blank">https://integra-demo.mybluemix.net/api/registerKey?keyOwner=Melissa&keyValue=3048024100C918FA</p>
+    </a>  </p>
+        <button type="button" id="checkKeyOwnerBtn" class="btn btn-primary btn-md">Get Key for Owner</button>  <label id="checkKeyOwnerLbl"></label>
       </div>
 
 
@@ -341,27 +362,24 @@
 
          $('#checkKeyOwnerBtn').click(function(e) {
              // alert ("call data");
-             var theIDType =  $('#idType').val();
+
              // $('#idResults').hide();
-             $('#existsDocLbl').text('');
-             var theID = $('#docHash').val();
+             //$('#existsDocLbl').text('');
+             var theID = $('#keyUser').val();
              //  alert ("docHash " + theID);
              $.ajax({
                  method: "Get",
-                 url: "./api/keyForOwner?value=" + theID,
+                 url: "./api/keyForOwner?owner=" + theID,
                  contentType: "application/json",
                  accept: "application/json",
-                 //data: JSON.stringify({name: name })
-                 // data: '{"$class": "com.integraledger.identityregistry.RegisterIdentity","type": "' + "bbbbbbb" + '"}'
+
              })
                  .done(function(data) {
-                     var res = (data['exists']);
-                     // alert ("got data:" + data['identityId']);
-                     $('#existsDocLbl').text(res);
+                     var res = (data['key']);
+                     //res = data;
+                     // alert ("got data:" + data);
+                     $('#checkKeyOwnerLbl').text(res);
 
-                     //$('#response').html(AntiXSS.sanitizeInput(data));
-                     //$('#nameInput').hide();
-                     // getNames();
                  });
 
          });
