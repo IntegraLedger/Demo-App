@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 var mydb;
 
 /* Endpoint to greet and add a new visitor to database.
-* Send a POST request to localhost:3000/api/visitors with body
+* Send a POST request to 18.221.90.80:3000/api/visitors with body
 * {
 * 	"name": "Bob"
 * }
@@ -115,7 +115,12 @@ app.get("/api/registerIdentity", function (request, response) {
   var theGuid = createGuid();
   var r = response
   var theType = request.query['type'];
-  var theValue = request.query['value']; //request.query['value'];
+
+  var theValue = request.query['value'];
+    console.log ("value = " + theValue);
+  if (theValue == ""){
+      theValue = createGuid();
+  }//request.query['value'];
   var theMetaData = request.query['metaData'];//request.query['metaData'];
  var theBody = '{"$class": "com.integraledger.identityregistry.RegisterIdentity","identityId":"' + theGuid + '","identityType":"' + theType+ '","metaData":"'+theMetaData+'","value":"' + theValue+ '"}';
  console.log (theBody);
@@ -135,18 +140,18 @@ app.get("/api/registerIdentity", function (request, response) {
    // console.log ('x ' + theMetaData);
     var request = require('request');
     var options = {
-      url: 'http://184.172.214.100:31090/api/RegisterIdentity',
+      url: 'http://18.221.90.80:3000/api/RegisterIdentity',
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       },
     body:theBody//,"metaData":"md1", "value":"v1"
     };
 
-    
+
     request
       .post(options,cb)
       .on('response', function(response) {
-      
+
   })
   }
 
@@ -175,7 +180,7 @@ app.get("/api/registerKey", function (request, response) {
         // console.log ('x ' + theMetaData);
         var request = require('request');
         var options = {
-            url: 'http://184.172.214.100:31090/api/RegisterKey',
+            url: 'http://18.221.90.80:3000/api/RegisterKey',
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             },
@@ -192,12 +197,12 @@ app.get("/api/registerKey", function (request, response) {
 
 });
 app.get("/api/postToClio", function (request, response) {
- 
+
   var r = response
   var theLMAT = request.query['LMAT'];
-  
+
   var cb = function callback(error, response, body) {
-  
+
    var theJSON = JSON.parse(body)
    var theData= theJSON['data']['id'];
    console.log (`${body} |||||| ${theData}`);
@@ -209,7 +214,7 @@ app.get("/api/postToClio", function (request, response) {
   }
 
   if(true) {
- 
+
     var request = require('request');
     var options = {
       url: `https://app.goclio.com/api/v4/matters?data[client][id]=941888686&data[description]=${encodeURIComponent('Created from Integra API Call')}&data[client_reference]=${theLMAT}`,
@@ -218,11 +223,11 @@ app.get("/api/postToClio", function (request, response) {
       }
     };
 
-    
+
     request
       .post(options,cb)
       .on('response', function(response) {
-      
+
   })
   }
 
@@ -230,49 +235,53 @@ app.get("/api/postToClio", function (request, response) {
 
 
 app.get("/api/identityExists", function (request, response) {
-  
-  var r = response
-var theId = request.query['id'];
+
+    var r = response
+    var theId = request.query['id'];
 
 
-  var cb = function callback(error, response, body) {
-    //if (!error && response.statusCode == 200) {
-      //var info = JSON.parse(body);
-     // console.log(info.stargazers_count + " Stars");
-     // console.log(info.forks_count + " Forks");
-    // console.log(response);
-    // console.log(body);
-    // var names = {'exists':'x' + body};
-    var res= JSON.parse(body);
-    var exists = res.length==0?false:true
-    var names = {'exists':exists};
-     r.json(names);
-     // r.send({'LMATID', theGuid});
-      return;
-   // }
-  }
+    var cb = function callback(error, response, body) {
+        //if (!error && response.statusCode == 200) {
+        //var info = JSON.parse(body);
+        // console.log(info.stargazers_count + " Stars");
+        // console.log(info.forks_count + " Forks");
+        // console.log(response);
+        // console.log(body);
+        // var names = {'exists':'x' + body};
+        var res= JSON.parse(body);
+        var exists = res.length==0?false:true
+        var names = {'exists':exists};
+        r.json(names);
+        // r.send({'LMATID', theGuid});
+        return;
+        // }
+    }
+//url: 'http://18.221.90.80:3000/api/queries/idExists?identityId=' + theId
 
-  if(true) {
-    var request = require('request');
-    var options = {
-      url: 'http://184.172.214.100:31090/api/queries/idExists?identityId=' + theId,
-      headers: {
-        'Content-Type': 'application/json',  'Accept': 'application/json'
-      }
-    };
+    var component = encodeURIComponent(`{"where":{"identityId": "${theId}"}}`);
+console.log ('xxxxxhttp://18.221.90.80:3000/api/IntegraIdentity?filter=' + component)
 
-    
-    request
-      .get(options,cb)
-      .on('response', function(response) {
-      
-  })
-  }
+    if(true) {
+        var request = require('request');
+        var options = {
+            url: 'http://18.221.90.80:3000/api/IntegraIdentity?filter=' + component,
+            headers: {
+                'Content-Type': 'application/json',  'Accept': 'application/json'
+            }
+        };
+
+
+        request
+            .get(options,cb)
+            .on('response', function(response) {
+
+            })
+    }
 
 });
 
 app.get("/api/valueExists", function (request, response) {
-  
+
   var r = response
 var theId = request.query['value'];
 
@@ -294,21 +303,23 @@ var theId = request.query['value'];
       return;
    // }
   }
+    var component = encodeURIComponent(`{"where":{"value": "${theId}"}}`);
+  //http://18.221.90.80:3000/api/queries/valueExists?value=
 
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://184.172.214.100:31090/api/queries/valueExists?value=' + theId,
+      url: 'http://18.221.90.80:3000/api/HashVal?filter=' + component,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
     };
 
-    
+
     request
       .get(options,cb)
       .on('response', function(response) {
-      
+
   })
   }
 
@@ -341,11 +352,14 @@ app.get("/api/keyForOwner", function (request, response) {
         return;
         // }
     }
+//http://18.221.90.80:3000/api/queries/keyForOwner?owner=' + 'resource%3Acom.integraledger.identityregistry.User%23' + theOwner
 
+    var component = `{"where":{"owner": "${theOwner}"}}`;
+console.log('http://18.221.90.80:3000/api/Key?filter=' + component);
     if(true) {
         var request = require('request');
         var options = {
-            url: 'http://184.172.214.100:31090/api/queries/keyForOwner?owner=' + 'resource%3Acom.integraledger.identityregistry.User%23' + theOwner,
+            url: 'http://18.221.90.80:3000/api/Key?filter=' + component,
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             }
@@ -399,5 +413,5 @@ app.use(express.static(__dirname + '/views'));
 
 var port = process.env.PORT || 3001
 app.listen(port, function() {
-    console.log("To view your app, open this link in your browser: http://localhost:" + port);
+    console.log("To view your app, open this link in your browser: http://18.221.90.80:" + port);
 });
