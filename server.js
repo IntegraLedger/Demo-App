@@ -2,11 +2,11 @@ var express = require("express");
 var app = express();
 var cfenv = require("cfenv");
 var bodyParser = require('body-parser')
-
+var serverAd = 'http://18.221.90.80:3000';
 //
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-//
+///
 // parse application/json
 app.use(bodyParser.json())
 
@@ -140,7 +140,7 @@ app.get("/api/registerIdentity", function (request, response) {
    // console.log ('x ' + theMetaData);
     var request = require('request');
     var options = {
-      url: 'http://18.221.90.80:3000/api/RegisterIdentity',
+      url: serverAd + '/api/RegisterIdentity',
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       },
@@ -156,6 +156,8 @@ app.get("/api/registerIdentity", function (request, response) {
   }
 
 });
+
+
 
 
 
@@ -180,7 +182,7 @@ app.get("/api/registerKey", function (request, response) {
         // console.log ('x ' + theMetaData);
         var request = require('request');
         var options = {
-            url: 'http://18.221.90.80:3000/api/RegisterKey',
+            url: serverAd + '/api/RegisterKey',
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             },
@@ -264,7 +266,7 @@ console.log ('xxxxxhttp://18.221.90.80:3000/api/IntegraIdentity?filter=' + compo
     if(true) {
         var request = require('request');
         var options = {
-            url: 'http://18.221.90.80:3000/api/IntegraIdentity?filter=' + component,
+            url: serverAd + '/api/IntegraIdentity?filter=' + component,
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             }
@@ -309,7 +311,7 @@ var theId = request.query['value'];
   if(true) {
     var request = require('request');
     var options = {
-      url: 'http://18.221.90.80:3000/api/HashVal?filter=' + component,
+      url:serverAd + '/api/HashVal?filter=' + component,
       headers: {
         'Content-Type': 'application/json',  'Accept': 'application/json'
       }
@@ -355,11 +357,11 @@ app.get("/api/keyForOwner", function (request, response) {
 //http://18.221.90.80:3000/api/queries/keyForOwner?owner=' + 'resource%3Acom.integraledger.identityregistry.User%23' + theOwner
 
     var component = `{"where":{"owner": "${theOwner}"}}`;
-console.log('http://18.221.90.80:3000/api/Key?filter=' + component);
+
     if(true) {
         var request = require('request');
         var options = {
-            url: 'http://18.221.90.80:3000/api/Key?filter=' + component,
+            url: serverAd + '/api/Key?filter=' + component,
             headers: {
                 'Content-Type': 'application/json',  'Accept': 'application/json'
             }
@@ -411,7 +413,7 @@ app.use(express.static(__dirname + '/views'));
 
 
 
-var port = process.env.PORT || 3001
+var port = process.env.PORT || 3001;
 app.listen(port, function() {
     console.log("To view your app, open this link in your browser: http://18.221.90.80:" + port);
 });
