@@ -1,5 +1,5 @@
 ---
 applications:
- - name: Integra-Demo
+ - name:  integra-api-demo
    random-route: true
    memory: 256M

@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+<<<<<<< Updated upstream
 var mydb;
 
 /* Endpoint to greet and add a new visitor to database.
@@ -376,6 +377,8 @@ app.get("/api/keyForOwner", function (request, response) {
     }
 
 });
+=======
+>>>>>>> Stashed changes
 
 // load local VCAP configuration  and service credentials
 var vcapLocal;
@@ -388,32 +391,18 @@ const appEnvOpts = vcapLocal ? { vcap: vcapLocal} : {}
 
 const appEnv = cfenv.getAppEnv(appEnvOpts);
 
-if (appEnv.services['cloudantNoSQLDB']) {
-  // Load the Cloudant library.
-  var Cloudant = require('cloudant');
 
-  // Initialize database with credentials
-  var cloudant = Cloudant(appEnv.services['cloudantNoSQLDB'][0].credentials);
-
-  //database name
-  var dbName = 'mydb';
-
-  // Create a new "mydb" database.
-  cloudant.db.create(dbName, function(err, data) {
-    if(!err) //err if database doesn't already exists
-      console.log("Created database: " + dbName);
-  });
-
-  // Specify the database we are going to use (mydb)...
-  mydb = cloudant.db.use(dbName);
-}
 
 //serve static file (index.html, images, css)
 app.use(express.static(__dirname + '/views'));
 
 
 
+<<<<<<< Updated upstream
 var port = process.env.PORT || 3001;
+=======
+var port = process.env.PORT || 3004;
+>>>>>>> Stashed changes
 app.listen(port, function() {
-    console.log("To view your app, open this link in your browser: http://18.221.90.80:" + port);
+    console.log("To view your app, open this link in your browser: Use Port" + port);
 });

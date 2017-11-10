@@ -201,11 +201,7 @@
         });
 
         $('#getIDBtn').click(function(e) {
-<<<<<<< Updated upstream
-            alert ("call data");
-=======
 
->>>>>>> Stashed changes
            var theIDType =  $('#idType').val();
            var value = $('#valueData').val();
            var md = $('#md').val();
