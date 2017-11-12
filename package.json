@@ -1,5 +1,5 @@
 {
-  "name": "Integra Demo",
+  "name": "IntegraDemo",
   "main": "server.js",
   "description": "An introduction to developing Node.js apps on the Bluemix platform",
   "version": "0.1.1",
