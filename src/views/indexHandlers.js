@@ -1,3 +1,9 @@
+// TODO: encapsulate globals
+
+var IntegraServer="https://integra-demo.mybluemix.net"
+var IBMClientID="09d25564-cfbd-4c90-820d-a8d3538a667a"
+var IBMClientSecret="c88c5925-f19c-4d7d-b4c4-cc5e3c928f97"
+
 // Dropdown text change
 $('.dropdown-menu li a').click(function () {
   $(this).parents('.dropdown').find('.btn').html($(this).text() + ' <span class="caret"></span>')
@@ -19,7 +25,7 @@ $('#getIDBtn').click(function (e) {
   const theIDType = $('#idType').val()
   const value = $('#valueData').val()
   const md = $('#md').val()
-  const theURL = `https://integra-demo.mybluemix.net/api/registerIdentity?type=${theIDType}&value=${value}`
+  const theURL = IntegraServer+`/api/registerIdentity?type=${theIDType}&value=${value}`
 
   $('#existsLbl').text('')
   $('#integraId').val('')
@@ -27,7 +33,11 @@ $('#getIDBtn').click(function (e) {
     method: 'Get',
     url: theURL,
     contentType: 'application/json',
-    accept: 'application/json'
+    accept: 'application/json',
+    headers: {
+       "X-IBM-Client-ID": IBMClientID,
+       "X-IBM-Client-Secret": IBMClientSecret
+    }
   })
     .done(function (data) {
       const res = (data['identityId'])
@@ -35,15 +45,20 @@ $('#getIDBtn').click(function (e) {
       $('#idResults').show()
     })
 })
+
 $('#verifyIDBtn').click(function (e) {
   const theIDType = $('#idType').val()
   $('#existsLbl').text('')
   const theID = $('#integraId').val()
   $.ajax({
     method: 'Get',
-    url: './api/identityExists?id=' + theID,
+    url: IntegraServer+'/api/identityExists?id=' + theID,
     contentType: 'application/json',
-    accept: 'application/json'
+    accept: 'application/json',
+    headers: {
+       "X-IBM-Client-ID": IBMClientID,
+       "X-IBM-Client-Secret": IBMClientSecret
+    }
   })
     .done(function (data) {
       const res = (data['exists'])
@@ -58,10 +73,14 @@ $('#verifyDocBtn').click(function (e) {
   //  alert ("docHash " + theID);
   $.ajax({
     method: 'Get',
-    url: './api/valueExists?value=' + theID,
+    url: IntegraServer+'/api/valueExists?value=' + theID,
     contentType: 'application/json',
-    accept: 'application/json'
-  })
+    accept: 'application/json',
+    headers: {
+      "X-IBM-Client-ID": IBMClientID,
+      "X-IBM-Client-Secret": IBMClientSecret
+    }
+})
     .done(function (data) {
       const res = (data['exists'])
       $('#existsDocLbl').text(res)
@@ -88,7 +107,7 @@ $('#CallClio').click(function (e) {
   const md = $('#md').val()
   const value = $('#valueData').val()
   const theIDType = $('#idType').val()
-  const theURL = `./api/registerIdentity?type=${theIDType}&value=${value}`
+  const theURL = IntegraServer+`/api/registerIdentity?type=${theIDType}&value=${value}`
   $.ajax({
     method: 'Get',
     url: theURL,
@@ -104,12 +123,16 @@ $('#CallClio').click(function (e) {
 $('#registerKeyBtn').click(function (e) {
   const value = $('#keyValue').val()
   const user = $('#keyUser').val()
-  const theURL = `./api/registerKey?owner=${user}&value=${value}`
+  const theURL = IntegraServer+`/api/registerKey?owner=${user}&value=${value}`
   $.ajax({
     method: 'Get',
     url: theURL,
     contentType: 'application/json',
-    accept: 'application/json'
+    accept: 'application/json',
+    headers: {
+      "X-IBM-Client-ID": IBMClientID,
+      "X-IBM-Client-Secret": IBMClientSecret
+    }
   })
     .done(function (data) {
       const res = (data['keyValue'])
@@ -120,9 +143,14 @@ $('#checkKeyOwnerBtn').click(function (e) {
   const theID = $('#keyUser').val()
   $.ajax({
     method: 'Get',
-    url: './api/keyForOwner?owner=' + theID,
+    url: IntegraServer+'/api/keyForOwner?owner=' + theID,
     contentType: 'application/json',
-    accept: 'application/json'
+    accept: 'application/json',
+    headers: {
+      "X-IBM-Client-ID": IBMClientID,
+      "X-IBM-Client-Secret": IBMClientSecret
+    }
+
   })
     .done(function (data) {
       const res = (data['key'])
@@ -146,7 +174,7 @@ function setDocumentType () {
 
 // Retreive all the visitors from the database
 function getNames () {
-  $.get('./api/visitors')
+  $.get(IntegraServer+'/api/visitors')
     .done(function (data) {
       if (data.length > 0) {
         data.forEach(function (element, index) {
