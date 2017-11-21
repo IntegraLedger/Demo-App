@@ -5,7 +5,7 @@ API demonstration materials for Integra users and partners.
 Please pardon our dust!  We are merging several variants of our demonstration projects into a single
 place for easier digestion.
 
-<b>This project is evolving, is subject to change.</b>
+<b>This project is evolving, and is subject to change.</b>
 
 ## Start Here
 Most users will only need to review only a few files:
