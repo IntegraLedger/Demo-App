@@ -216,8 +216,9 @@ app.get('/api/identityExists', function (request, response) {
       response.status(500).send(err)
       return
     }
-    const exists = JSON.parse(body).length > 0
-    const names = {'exists': exists}
+    var elements = JSON.parse(body);
+    const exists = elements.length > 0
+    const names = {'exists': exists, "data": elements}
     response.json(names)
   }
 
