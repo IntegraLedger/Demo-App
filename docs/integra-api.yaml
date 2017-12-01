@@ -1,0 +1,241 @@
+# OpenAPI ("Swagger") v3 descrption of basic Integra Ledger operations.
+openapi: 3.0.0
+info:
+  title: Integra Ledger API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.0.1
+
+servers:
+  - url: http://integra-demo.mybluemix.net/api/
+    description: Integra Ledger API integration development and testing server.
+
+paths:
+  /registerIdentity:
+    get:
+      summary: Generate and return a unique idenitifier.
+      description:
+        This endpoint can be used to generate various types of unique
+        identifiers, depending on the value of the <b>type</b> parameter.
+      parameters:
+        - in: query
+          name: metadata
+          description: Optional metadata describing the record.
+          schema:
+            type: string
+        - in: query
+          name: type
+          required: true
+          description: >
+            The type of the identity to register:
+             * 'LMATId': a Legal Matter ID
+             * 'DocumentId': a Document ID
+          schema:
+            type: string
+            enum:
+              - LMATId
+              - DocumentId
+        - in: query
+          name: value
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            <b>OK</b><br/>
+            An ID appropriate for the type registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identityId: string
+                  description:
+                    A string containing the new identifier.  The nature of the string depends
+                    on the type of identifier generated.
+        '401':
+          description:
+            <b>Unauthorized</b><br/>
+            The request was made without proper authentication.  Check that the client
+            headers have been set properly to include an authorized pair of values for
+            <b>X-IBM-CLIENT-ID</b> and <b>X-IBM-CLIENT-SECRET</b>.  Note that Integra
+            reserves the right to obsolete IDs and keys issued for testing, training,
+            experimental, and/or development purposes.
+            Contact Integra for replacement access materials if necessary.
+        '422':
+          description:
+            <b>'Unprocessable entry'</b>
+            The request was not properly formed, and the operation could not be completed.
+            Review all required parameters.
+  /identityExists:
+    get:
+      summary:
+        Verifies the existance of an ID.
+      description:
+        Verifies or refutes the existence of an identity ID, of the specified type and
+        value, on the Integra Ledger.
+      parameters:
+        - in: query
+          name: id
+          description: A string containing the ID to search for.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description:
+            <b>OK</b><br/>
+            The search completed successfully.  Note that this means that the ID's
+            existence on the ledger has <i>either</i> been verified or refuted.
+            You must still inspect the <b>exists</b> value in the returned object
+            to know which.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exists: boolean
+                  description:
+                    <b>OK</b>
+                    True if and only if the identity ID passed in exists, else false.
+        '401':
+          description:
+            <b>Unauthorized</b><br/>
+            The request was made without proper authentication.  Check that the client
+            headers have been set properly to include an authorized pair of values for
+            <b>X-IBM-CLIENT-ID</b> and <b>X-IBM-CLIENT-SECRET</b>.  Note that Integra
+            reserves the right to obsolete IDs and keys issued for testing, training,
+            experimental, and/or development purposes.
+            Contact Integra for replacement access materials if necessary.
+        '422':
+          description:
+            <b>'Unprocessable entry'</b>
+            The request was not properly formed, and the operation could not be completed.
+            Review all required parameters.
+  /valueExists:
+    get:
+      summary:
+        Verifies that a value exists on the ledger.
+      description:
+        Verifies that a value exists on the ledger, regardless of the key that it exists
+        in.
+      parameters:
+        - in: query
+          name: value
+          description: A string containing the value to search for.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description:
+            <b>OK</b><br/>
+            The search completed successfully.  Note that this means that the value's
+            existence on the ledger has <i>either</i> been verified <i>or</i> refuted.
+            You must still inspect the <b>exists</b> value in the returned object to
+            know which.
+          content:
+            text/plain:
+              schema:        
+        '401':
+          description:
+            <b>Unauthorized</b><br/>
+            The request was made without proper authentication.  Check that the client
+            headers have been set properly to include an authorized pair of values for
+            <b>X-IBM-CLIENT-ID</b> and <b>X-IBM-CLIENT-SECRET</b>.  Note that Integra
+            reserves the right to obsolete IDs and keys issued for testing, training,
+            experimental, and/or development purposes.
+            Contact Integra for replacement access materials if necessary.
+        '422':
+          description:
+            <b>'Unprocessable entry'</b>
+            The request was not properly formed, and the operation could not be completed.
+            Review all required parameters.
+  /registerKey:
+    get:
+      summary:
+        Registers a public encryption key for a given email address.
+      description:
+        Registers a public encryption key for a given email address.  Integra reserves
+        the right to void or override any inaccurate or fraudulent registrations, and
+        keys registered by via this endpoing may be subject to additional verification
+        during retrieval.  However, the registration attempt is recorded immediately.
+      parameters:
+        - in: query
+          name: owner
+          description: A string containing the email address of the owner.
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: value
+          description: A string contining the public key of the owner.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description:
+            <b>OK</b><br/>
+            The specified key has been registered for this email address, <i>or</i> a prior
+            key already exists.  If a key has already been registered for this email address,
+            presently this function will succeed but have no effect.  Please contact Integra
+            for further details if needed.  This behavior is subject to change.
+        '401':
+          description:
+            <b>Unauthorized</b><br/>
+            The request was made without proper authentication.  Check that the client
+            headers have been set properly to include an authorized pair of values for
+            <b>X-IBM-CLIENT-ID</b> and <b>X-IBM-CLIENT-SECRET</b>.  Note that Integra
+            reserves the right to obsolete IDs and keys issued for testing, training,
+            experimental, and/or development purposes.
+            Contact Integra for replacement access materials if necessary.
+        '422':
+          description:
+            <b>'Unprocessable entry'</b>
+            The request was not properly formed, and the operation could not be completed.
+            Review all required parameters.
+  /keyForOwner:
+    get:
+      summary:
+        Retrieves a public encryption key associated with an email address.
+      description:
+        Retrieves a public encryption key associated with an email address.
+      parameters:
+        - in: query
+          name: owner
+          description: A string containing the email address of the owner.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description:
+            <b>OK</b><br/>
+            The search completed successfully.  Note that this means that the key's
+            existence on the ledger has <i>either</i> been verified <i>or</i> refuted.
+            If a key was found, the <b>key</b> property on the returned object will
+            contain that string.  If a key was not found, the <b>key</b> property will
+            contain the value <b>"No Key"</b>.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key: string
+                  description:
+                    A string containing the public key associated with the owner, or the
+                    special value <b>"No Key"</b> if no key was found.
+        '401':
+          description:
+            <b>Unauthorized</b><br/>
+            The request was made without proper authentication.  Check that the client
+            headers have been set properly to include an authorized pair of values for
+            <b>X-IBM-CLIENT-ID</b> and <b>X-IBM-CLIENT-SECRET</b>.  Note that Integra
+            reserves the right to obsolete IDs and keys issued for testing, training,
+            experimental, and/or development purposes.
+            Contact Integra for replacement access materials if necessary.
+        '422':
+          description:
+            <b>'Unprocessable entry'</b>
+            The request was not properly formed, and the operation could not be completed.
+            Review all required parameters.
