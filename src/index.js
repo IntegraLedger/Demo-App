@@ -249,8 +249,8 @@ app.get('/api/valueExists', function (request, response) {
       response.status(500).send(err)
       return
     }
-    const exists = JSON.parse(body) > 0
-    const names = {'exists': exists}
+    let data = JSON.parse(body);
+    const names = {'exists': data.length > 0, "data": data}
     response.json(names)
   }
   const component = encodeURIComponent(`{"where":{"value": "${theId}"}}`)
