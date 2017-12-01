@@ -19,7 +19,7 @@ $('#getIDBtn').click(function (e) {
   const theIDType = $('#idType').val()
   const value = $('#valueData').val()
   const md = $('#md').val()
-  const theURL = `https://integra-demo.mybluemix.net/api/registerIdentity?type=${theIDType}&value=${value}&metadata=${md}`
+  const theURL = `/api/registerIdentity?type=${theIDType}&value=${value}&metadata=${md}`
 
   $('#existsLbl').text('')
   $('#integraId').val('')

@@ -107,8 +107,10 @@ const registerIdentity = function (request, response) {
   if (!theValue || !theValue.length) {
     theValue = _utils.createGuid()
   }
+
   const theMetaData = request.query['metadata'] || request.body['metadata']// request.query['metaData'];
-  const theBody = `{"$class": "com.integraledger.identityregistry.RegisterIdentity","identityId":"${theGuid}","identityType":"${theType}","metaData":"${theMetaData}","value":"${theValue}"}`
+  let metadataStr = theMetaData ? ',"metaData":"' + theMetaData + `"` : '';
+  const theBody = `{"$class": "com.integraledger.identityregistry.RegisterIdentity","identityId":"${theGuid}","identityType":"${theType}","value":"${theValue}"` + metadataStr +"}"
   console.log(theBody)
   const cb = function (error, res, body) {
     let err = _utils.getError(error, JSON.parse(body))
