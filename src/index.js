@@ -107,8 +107,10 @@ const registerIdentity = function (request, response) {
   if (!theValue || !theValue.length) {
     theValue = _utils.createGuid()
   }
-  const theMetaData = request.query['metaData'] || request.body['metaData']// request.query['metaData'];
-  const theBody = `{"$class": "com.integraledger.identityregistry.RegisterIdentity","identityId":"${theGuid}","identityType":"${theType}","metaData":"${theMetaData}","value":"${theValue}"}`
+
+  const theMetaData = request.query['metadata'] || request.body['metadata']// request.query['metaData'];
+  let metadataStr = theMetaData ? ',"metaData":"' + theMetaData + `"` : '';
+  const theBody = `{"$class": "com.integraledger.identityregistry.RegisterIdentity","identityId":"${theGuid}","identityType":"${theType}","value":"${theValue}"` + metadataStr +"}"
   console.log(theBody)
   const cb = function (error, res, body) {
     let err = _utils.getError(error, JSON.parse(body))
@@ -216,8 +218,9 @@ app.get('/api/identityExists', function (request, response) {
       response.status(500).send(err)
       return
     }
-    const exists = JSON.parse(body).length > 0
-    const names = {'exists': exists}
+    var elements = JSON.parse(body);
+    const exists = elements.length > 0
+    const names = {'exists': exists, "data": elements}
     response.json(names)
   }
 
@@ -246,8 +249,8 @@ app.get('/api/valueExists', function (request, response) {
       response.status(500).send(err)
       return
     }
-    const exists = JSON.parse(body) > 0
-    const names = {'exists': exists}
+    let data = JSON.parse(body);
+    const names = {'exists': data.length > 0, "data": data}
     response.json(names)
   }
   const component = encodeURIComponent(`{"where":{"value": "${theId}"}}`)

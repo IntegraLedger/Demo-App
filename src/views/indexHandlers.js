@@ -25,7 +25,7 @@ $('#getIDBtn').click(function (e) {
   const theIDType = $('#idType').val()
   const value = $('#valueData').val()
   const md = $('#md').val()
-  const theURL = IntegraServer+`/api/registerIdentity?type=${theIDType}&value=${value}`
+  const theURL = `/api/registerIdentity?type=${theIDType}&value=${value}&metadata=${md}`
 
   $('#existsLbl').text('')
   $('#integraId').val('')
